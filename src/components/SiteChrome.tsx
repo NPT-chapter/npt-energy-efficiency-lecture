@@ -11,7 +11,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 bg-brand text-brand-foreground shadow-elegant">
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
         <a href="https://npt-links.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="NPT">
-          <img src={nptLogo.url} alt="NCTU Petroleum Tech Chapter logo" className="h-12 w-auto object-contain" />
+          <img src={nptLogo.url} alt="NCTU Petroleum Tech Chapter logo" className="h-9 w-auto object-contain sm:h-11" />
         </a>
         <span className="h-8 w-px bg-brand-foreground/25" />
         <a href="https://www.facebook.com/nctu.edu.eg/" target="_blank" rel="noopener noreferrer" aria-label="NCTU">
