@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { t } = usePrefs();
+  const { t, lang } = usePrefs();
   const cards = [
     { icon: Gauge, title: t("ov1_t"), desc: t("ov1_d") },
     { icon: Leaf, title: t("ov2_t"), desc: t("ov2_d") },
