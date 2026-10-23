@@ -142,7 +142,7 @@ function Dashboard() {
   );
 }
 
-function Stat({ label, value }: { label: string; value?: number }) {
+function Stat({ label, value }: { label: string; value?: number | undefined }) {
   return (
     <div className="rounded-2xl border bg-card p-5 shadow-elegant">
       <p className="text-sm text-muted-foreground">{label}</p>
@@ -151,7 +151,7 @@ function Stat({ label, value }: { label: string; value?: number }) {
   );
 }
 
-function Breakdown({ title, data, prefix }: { title: string; data?: Record<string, number>; prefix: string }) {
+function Breakdown({ title, data, prefix }: { title: string; data?: Record<string, number> | undefined; prefix: string }) {
   const { t } = usePrefs();
   return (
     <div className="rounded-2xl border bg-card p-5 shadow-elegant">

@@ -50,7 +50,7 @@ function RegisterPage() {
     const parsed = registrationSchema.safeParse(payload);
     if (!parsed.success) {
       const next: Errors = {};
-      for (const i of parsed.error.issues) next[i.path[0] as keyof Errors] = errKey[String(i.path[0])];
+      for (const i of parsed.error.issues) { const k = errKey[String(i.path[0])]; if (k) next[i.path[0] as keyof Errors] = k; }
       setErrors(next);
       return;
     }
