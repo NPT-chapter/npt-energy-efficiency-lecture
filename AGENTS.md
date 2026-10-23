@@ -8,3 +8,10 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Registrations table has no client policies; all reads/writes go through server functions in src/lib/*.functions.ts using the admin client — keeps student data and codes private.
+- Duplicate prevention relies on DB unique constraints (email, phone, upper(student_code)) — concurrency-safe without locks.
+- Organizer access is checked server-side via has_role (admin/organizer in user_roles) — never trust the UI.
+- Attendance code is passed to the thank-you page only via in-memory store (src/lib/code-store.ts) — never URL/storage.
+- UI strings live in src/lib/i18n.tsx (en/ar dictionaries); add every new string to both.
