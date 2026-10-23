@@ -1,4 +1,7 @@
 export const EVENT_TITLE = "Decarbonization and Energy Efficiency in Midstream Gas Operations";
 export const SPEAKER_NAME = "Dr. Zeinab Ibrahim";
-/** Set to a display string (e.g. "Tue 10 Nov · 12:00 PM · Hall A") once announced. */
-export const EVENT_SCHEDULE: string | null = null;
+/** Display strings for the announced date/time. Set to null to fall back to the "announced soon" line. */
+export const EVENT_SCHEDULE: { en: string; ar: string } | null = {
+  en: "Monday, October 26, 2026 · 8:00 PM",
+  ar: "الاثنين 26 أكتوبر 2026 · 8:00 مساءً",
+};

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { t } = usePrefs();
+  const { t, lang } = usePrefs();
   const cards = [
     { icon: Gauge, title: t("ov1_t"), desc: t("ov1_d") },
     { icon: Leaf, title: t("ov2_t"), desc: t("ov2_d") },
@@ -38,7 +38,7 @@ function Index() {
             <Link to="/register" className="inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground shadow-elegant transition-transform hover:-translate-y-0.5">
               {t("register_now")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </Link>
-            <span className="inline-flex items-center gap-2 text-sm opacity-80"><CalendarClock className="h-4 w-4" />{EVENT_SCHEDULE ?? t("schedule_tba")}</span>
+            <span className="inline-flex items-center gap-2 text-sm opacity-80"><CalendarClock className="h-4 w-4" />{EVENT_SCHEDULE ? EVENT_SCHEDULE[lang] : t("schedule_tba")}</span>
           </div>
         </div>
       </section>
