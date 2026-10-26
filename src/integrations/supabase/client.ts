@@ -11,12 +11,16 @@ function isNewSupabaseApiKey(value: string): boolean {
 // The public URL can be reachable only from the browser, so server requests go to the runtime URL of the same backend.
 function serverSupabaseUrl(publicUrl: string, supabaseKey: string): string | undefined {
   if (typeof window !== "undefined" || typeof process === "undefined") return undefined;
-  const serverUrl = process.env["NEXT_PUBLIC_SUPABASE_URL"]?.replace(/\/+$/, "");
+  const configuredServerUrl =
+    process.env["SUPABASE_URL"] ?? process.env["NEXT_PUBLIC_SUPABASE_URL"];
+  const serverUrl = configuredServerUrl?.replace(/\/+$/, "");
+  const serverPublishableKey =
+    process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"];
   if (
     !serverUrl ||
     serverUrl === publicUrl ||
     !isExpectedSupabaseUrl(serverUrl) ||
-    process.env["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"] !== supabaseKey
+    serverPublishableKey !== supabaseKey
   )
     return undefined;
   return serverUrl;
@@ -57,19 +61,21 @@ function createSupabaseFetch(supabaseUrl: string, supabaseKey: string): typeof f
 }
 
 function createSupabaseClient() {
-  // Vite exposes these public values at build time; no server-only key is read here.
-  const SUPABASE_URL = resolveClientSupabaseUrl(import.meta.env["NEXT_PUBLIC_SUPABASE_URL"]);
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"];
+  // Vite defines only these public aliases; the server-only secret is never read here.
+  const configuredUrl = import.meta.env["VITE_SUPABASE_URL"];
+  const SUPABASE_PUBLISHABLE_KEY = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
 
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  if (!configuredUrl || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
-      ...(!import.meta.env["NEXT_PUBLIC_SUPABASE_URL"] ? ["NEXT_PUBLIC_SUPABASE_URL"] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"] : []),
+      ...(!configuredUrl ? ["SUPABASE_URL"] : []),
+      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
     ];
     const message = `Missing required Supabase environment variable(s): ${missing.join(", ")}.`;
     console.error(`[Supabase] ${message}`);
     throw new Error(message);
   }
+
+  const SUPABASE_URL = resolveClientSupabaseUrl(configuredUrl);
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     global: {

@@ -25,14 +25,14 @@ export function resolveClientSupabaseUrl(configuredUrl: string | undefined): str
   if (isExpectedSupabaseUrl(configuredUrl)) return EXPECTED_SUPABASE_URL;
 
   console.warn(
-    "[Supabase] NEXT_PUBLIC_SUPABASE_URL does not match the approved project. Client requests are pinned to the approved project until configuration is corrected.",
+    "[Supabase] SUPABASE_URL does not match the approved project. Client requests are pinned to the approved project until configuration is corrected.",
   );
   return EXPECTED_SUPABASE_URL;
 }
 
 export function requireTargetSupabaseUrl(configuredUrl: string | undefined): string {
   if (!configuredUrl) {
-    throw new Error("Missing required environment variable: NEXT_PUBLIC_SUPABASE_URL.");
+    throw new Error("Missing required environment variable: SUPABASE_URL.");
   }
 
   if (!isExpectedSupabaseUrl(configuredUrl)) {
