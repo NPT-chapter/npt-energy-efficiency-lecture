@@ -8,10 +8,12 @@ import {
   normalizeStudentCode,
   generateAttendanceCode,
 } from "./validation";
+import { REGISTRATION_OPEN } from "./event";
 
 export type RegisterResult =
   | { status: "ok"; fullName: string; attendanceCode: string }
   | { status: "duplicate" }
+  | { status: "closed" }
   | { status: "rate_limited" }
   | { status: "invalid" }
   | { status: "error" };
@@ -25,6 +27,7 @@ async function clientIp(): Promise<string> {
 export const registerStudent = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => d)
   .handler(async ({ data }): Promise<RegisterResult> => {
+    if (!REGISTRATION_OPEN) return { status: "closed" };
     const parsed = registrationSchema.safeParse(data);
     if (!parsed.success) return { status: "invalid" };
     const v = parsed.data;
