@@ -8,7 +8,7 @@ import { usePrefs, type TKey } from "@/lib/i18n";
 import { registerStudent } from "@/lib/registration.functions";
 import { registrationSchema, ACADEMIC_YEARS, DISCOVERY_SOURCES } from "@/lib/validation";
 import { setLastRegistration } from "@/lib/code-store";
-import { EVENT_TITLE, REGISTRATION_OPEN } from "@/lib/event";
+import { EVENT_TITLE } from "@/lib/event";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -64,7 +64,7 @@ function RegisterPage() {
         navigate({ to: "/thank-you" });
         return;
       }
-      setFormError(res.status === "closed" ? "reg_closed" : res.status === "duplicate" ? "e_duplicate" : res.status === "rate_limited" ? "e_rate" : res.status === "invalid" ? "e_invalid" : "e_server");
+      setFormError(res.status === "duplicate" ? "e_duplicate" : res.status === "rate_limited" ? "e_rate" : res.status === "invalid" ? "e_invalid" : "e_server");
     } catch {
       setFormError("e_server");
     } finally {
@@ -83,12 +83,6 @@ function RegisterPage() {
         </div>
       </div>
       <div className="mx-auto -mt-4 max-w-2xl px-4 pb-20">
-        {!REGISTRATION_OPEN ? (
-          <div className="animate-rise space-y-5 rounded-3xl border bg-card p-6 text-center shadow-elegant md:p-8">
-            <p className="text-lg">{t("reg_closed")}</p>
-            <Link to="/recover" className="inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground">{t("find_code_link")}</Link>
-          </div>
-        ) : (
         <form noValidate onSubmit={onSubmit} className="animate-rise space-y-5 rounded-3xl border bg-card p-6 shadow-elegant md:p-8">
           <Field label={t("f_name")} htmlFor="fullName" error={errors.fullName && t(errors.fullName)}>
             <TextInput id="fullName" autoComplete="name" placeholder={t("f_name_ph")} value={f.fullName} onChange={(e) => set("fullName", e.target.value)} maxLength={150} />
@@ -132,7 +126,6 @@ function RegisterPage() {
           </PrimaryButton>
           <p className="text-center text-sm"><Link to="/recover" className="text-primary underline-offset-4 hover:underline">{t("find_code_link")}</Link></p>
         </form>
-        )}
       </div>
     </PageShell>
   );
