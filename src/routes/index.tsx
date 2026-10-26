@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Gauge, Leaf, Factory, Linkedin, CalendarClock } from "lucide-react";
 import { PageShell } from "@/components/SiteChrome";
 import { usePrefs } from "@/lib/i18n";
-import { EVENT_TITLE, SPEAKER_NAME, EVENT_SCHEDULE } from "@/lib/event";
+import { EVENT_TITLE, SPEAKER_NAME, EVENT_SCHEDULE, allowNewRegistration } from "@/lib/event";
 import speaker from "@/assets/Zeinab_Ibrahim.png.asset.json";
 
 export const Route = createFileRoute("/")({

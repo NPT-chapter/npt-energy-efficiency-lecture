@@ -1,14 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useRef, useState } from "react";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { KeyRound, Loader2, ShieldCheck } from "lucide-react";
 import { PageShell } from "@/components/SiteChrome";
 import { Field, TextInput, SelectInput, PrimaryButton } from "@/components/form-bits";
 import { usePrefs, type TKey } from "@/lib/i18n";
 import { registerStudent } from "@/lib/registration.functions";
 import { registrationSchema, ACADEMIC_YEARS, DISCOVERY_SOURCES } from "@/lib/validation";
 import { setLastRegistration } from "@/lib/code-store";
-import { EVENT_TITLE } from "@/lib/event";
+import { EVENT_TITLE, registerPageMode } from "@/lib/event";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -64,13 +64,35 @@ function RegisterPage() {
         navigate({ to: "/thank-you" });
         return;
       }
-      setFormError(res.status === "duplicate" ? "e_duplicate" : res.status === "rate_limited" ? "e_rate" : res.status === "invalid" ? "e_invalid" : "e_server");
+      setFormError(res.status === "duplicate" ? "e_duplicate" : res.status === "rate_limited" ? "e_rate" : res.status === "invalid" ? "e_invalid" : res.status === "closed" ? "e_closed" : "e_server");
     } catch {
       setFormError("e_server");
     } finally {
       busy.current = false;
       setLoading(false);
     }
+  }
+
+  if (registerPageMode() === "closed") {
+    return (
+      <PageShell>
+        <div className="bg-hero">
+          <div className="mx-auto max-w-2xl px-4 pb-10 pt-14 text-brand-foreground">
+            <p className="text-sm font-medium text-eco" dir="ltr">{EVENT_TITLE}</p>
+            <h1 className="mt-2 text-3xl font-bold md:text-4xl">{t("closed_title")}</h1>
+            <p className="mt-2 opacity-85">{t("hero_closed")}</p>
+          </div>
+        </div>
+        <div className="mx-auto -mt-4 max-w-2xl px-4 pb-20">
+          <div className="animate-rise space-y-6 rounded-3xl border bg-card p-6 shadow-elegant md:p-8">
+            <p className="leading-relaxed text-foreground/85">{t("closed_body")}</p>
+            <Link to="/recover" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground">
+              <KeyRound className="h-4 w-4" />{t("nav_recover")}
+            </Link>
+          </div>
+        </div>
+      </PageShell>
+    );
   }
 
   return (
