@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Gauge, Leaf, Factory, Linkedin, CalendarClock } from "lucide-react";
 import { PageShell } from "@/components/SiteChrome";
 import { usePrefs } from "@/lib/i18n";
-import { EVENT_TITLE, SPEAKER_NAME, EVENT_SCHEDULE } from "@/lib/event";
+import { EVENT_TITLE, SPEAKER_NAME, EVENT_SCHEDULE, allowNewRegistration } from "@/lib/event";
 import speaker from "@/assets/Zeinab_Ibrahim.png.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -35,11 +35,18 @@ function Index() {
           <p className="animate-rise mt-6 max-w-2xl text-lg opacity-85 [animation-delay:160ms]">{t("hero_intro")}</p>
           <p className="animate-rise mt-3 font-display text-lg [animation-delay:200ms]">{SPEAKER_NAME}</p>
           <div className="animate-rise mt-10 flex flex-wrap items-center gap-4 [animation-delay:260ms]">
-            <Link to="/register" className="inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground shadow-elegant transition-transform hover:-translate-y-0.5">
-              {t("register_now")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
-            </Link>
+            {allowNewRegistration() ? (
+              <Link to="/register" className="inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground shadow-elegant transition-transform hover:-translate-y-0.5">
+                {t("register_now")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              </Link>
+            ) : (
+              <Link to="/recover" className="inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground shadow-elegant transition-transform hover:-translate-y-0.5">
+                {t("nav_recover")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              </Link>
+            )}
             <span className="inline-flex items-center gap-2 text-sm opacity-80"><CalendarClock className="h-4 w-4" />{EVENT_SCHEDULE ? EVENT_SCHEDULE[lang] : t("schedule_tba")}</span>
           </div>
+          {!allowNewRegistration() && <p className="animate-rise mt-4 max-w-2xl text-sm font-semibold text-eco [animation-delay:300ms]">{t("hero_closed")}</p>}
         </div>
       </section>
 
@@ -80,11 +87,23 @@ function Index() {
 
       <section className="mx-auto max-w-6xl px-4 py-20">
         <div className="bg-hero rounded-3xl p-10 text-center text-brand-foreground shadow-elegant md:p-16">
-          <h2 className="text-3xl font-bold md:text-4xl">{t("cta_title")}</h2>
-          <p className="mx-auto mt-4 max-w-xl opacity-85">{t("cta_desc")}</p>
-          <Link to="/register" className="mt-8 inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground">
-            {t("register_now")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
-          </Link>
+          {allowNewRegistration() ? (
+            <>
+              <h2 className="text-3xl font-bold md:text-4xl">{t("cta_title")}</h2>
+              <p className="mx-auto mt-4 max-w-xl opacity-85">{t("cta_desc")}</p>
+              <Link to="/register" className="mt-8 inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground">
+                {t("register_now")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <h2 className="text-3xl font-bold md:text-4xl">{t("closed_title")}</h2>
+              <p className="mx-auto mt-4 max-w-xl opacity-85">{t("closed_short")}</p>
+              <Link to="/recover" className="mt-8 inline-flex items-center gap-2 rounded-full bg-eco px-7 py-3.5 font-semibold text-eco-foreground">
+                {t("nav_recover")}<ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              </Link>
+            </>
+          )}
         </div>
       </section>
     </PageShell>
